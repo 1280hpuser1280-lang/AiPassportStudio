@@ -17,7 +17,7 @@
         .animate-in { animation: fadeIn 0.4s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
-</head>
+</head><script src="https://unpkg.com/@imgly/background-removal"></script>
 <body>
     <div id="root"></div>
 
@@ -84,7 +84,26 @@
 
             const fileInputRef = useRef(null);
             const canvasRef = useRef(null);
+            async function removeBackground() {
+  const file = fileInputRef.current?.files?.[0];
 
+  if (!file) {
+    alert("Upload image first");
+    return;
+  }
+
+  try {
+    const blob = await window.backgroundRemoval(file);
+    const url = URL.createObjectURL(blob);
+
+    setProcessedImage(url);
+
+  } catch (error) {
+    console.error(error);
+    alert("Error removing background");
+  }
+}
+            
             const fetchWithRetry = async (url, options, retries = 3) => {
                 for (let i = 0; i < retries; i++) {
                     try {
